@@ -20,29 +20,30 @@ public class PostController {
     private final PostService postService;
 
     // 게시글 작성
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    @PostMapping("/common")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/user")
     public ResponseEntity<ResponseDto<PostResponseDto>> createPost(@RequestBody PostRequestDto dto){
         ResponseDto<PostResponseDto> post = postService.createPost(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
     // 게시글 조회 (전체)
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<ResponseDto<List<PostResponseDto>>> getAllPosts(){
         ResponseDto<List<PostResponseDto>> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
     // 게시글 조회 (단건)
-    @GetMapping("/{id}")
+    @GetMapping("/all/{id}")
     public ResponseEntity<ResponseDto<PostResponseDto>> getPostById(@PathVariable Long id){
         ResponseDto<PostResponseDto> post = postService.getPostById(id);
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
     // 게시글 수정
-    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/user/{id}")
     public ResponseEntity<ResponseDto<PostResponseDto>> updatePost(
             @PathVariable Long id, @RequestBody PostRequestDto dto
     ){

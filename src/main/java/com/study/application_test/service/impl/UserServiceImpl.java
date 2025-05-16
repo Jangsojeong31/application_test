@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+    // 사용자 정보 조회
     @Override
     public ResponseDto<GetUserResponseDto> getUserInfo(String username) {
         User user = userRepository.findByUsername(username)

@@ -1,15 +1,14 @@
-package com.study.application_test.dto.request;
+package com.study.application_test.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostRequestDto {
+public class NoticeResponseDto {
+    private Long id;
     private Long userId;
     private String title;
     private String content;
