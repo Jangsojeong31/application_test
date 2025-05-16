@@ -49,23 +49,63 @@ public class AuthServiceImpl implements AuthService {
 
         String encodePassword = bCryptPasswordEncoder.encode(password);
 
-        // 권한 정보 확인
-        Role userRole = roleRepository.findByRoleName("USER")
-                .orElseGet(() -> roleRepository.save(Role.builder().roleName("USER").build())); // 없으면 생성후 가져오기
+        if (username.contains("admin")) {
+            Role userRole = roleRepository.findByRoleName("ADMIN")
+                    .orElseGet(() -> roleRepository.save(Role.builder().roleName("ADMIN").build())); // 없으면 생성후 가져오기
 
-        Set<Role> roleSet = new HashSet<>();
-        roleSet.add(userRole);
+            Set<Role> roleSet = new HashSet<>();
+            roleSet.add(userRole);
+            user = User.builder()
+                    .username(username)
+                    .password(encodePassword)
+                    .roles(roleSet)
+                    .build();
 
-        user = User.builder()
-                .username(username)
-                .password(encodePassword)
-                .roles(roleSet)
-                .build();
+            userRepository.save(user);
 
-        userRepository.save(user);
+            data = new UserSignUpResponseDto(user);
+            return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
-        data = new UserSignUpResponseDto(user);
-        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+        } else if (username.contains("user")) {
+            Role userRole = roleRepository.findByRoleName("USER")
+                    .orElseGet(() -> roleRepository.save(Role.builder().roleName("USER").build())); // 없으면 생성후 가져오기
+
+            Set<Role> roleSet = new HashSet<>();
+            roleSet.add(userRole);
+
+            user = User.builder()
+                    .username(username)
+                    .password(encodePassword)
+                    .roles(roleSet)
+                    .build();
+
+            userRepository.save(user);
+
+            data = new UserSignUpResponseDto(user);
+            return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+        } else {
+//            throw new IllegalArgumentException("해당 username은 적합하지 않습니다.");
+            return ResponseDto.setFailed("해당 username은 적합하지 않습니다.");
+        }
+
+//        // 권한 정보 확인
+//        if (username.cont)
+//        Role userRole = roleRepository.findByRoleName("USER")
+//                .orElseGet(() -> roleRepository.save(Role.builder().roleName("USER").build())); // 없으면 생성후 가져오기
+//
+//        Set<Role> roleSet = new HashSet<>();
+//        roleSet.add(userRole);
+
+//        user = User.builder()
+//                .username(username)
+//                .password(encodePassword)
+//                .roles(roleSet)
+//                .build();
+//
+//        userRepository.save(user);
+//
+//        data = new UserSignUpResponseDto(user);
+//        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
     }
 
     // 로그인
